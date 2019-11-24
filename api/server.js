@@ -6,7 +6,7 @@ const Shoutouts = require("../data/shoutouts-model.js");
 const server = express();
 
 server.use(helmet());
-server.use(express.json());
+server.use(express.json()); // lets express parse JSON from req.body
 
 server.get("/", (req, res) => {
   Shoutouts.find()
@@ -21,6 +21,17 @@ server.get("/", (req, res) => {
 });
 
 server.post("/", (req, res) => {
+  Shoutouts.add(req.body)
+    .then(shoutout => {
+      res.status(201).json(shoutout);
+    })
+    .catch(error => {
+      console.error("\nERROR", error);
+      res.status(500).json({ error: "Cannot add the shoutout" });
+    });
+});
+
+server.put("/", (req, res) => {
   Shoutouts.add(req.body)
     .then(shoutout => {
       res.status(201).json(shoutout);
